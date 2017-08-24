@@ -83,3 +83,35 @@ Board.prototype.resolveCell = function(cellState, neighbors) {
 		return true;
 	}
 }
+
+function drawGrid(parent, board) {
+  for (var y = 0; y < board.grid.length; y++) {
+    var row = document.createElement("div");
+    for (var x = 0; x < board.grid[y].length; x++) {
+      var checkbox = document.createElement("input");
+      checkbox.row = y;
+      checkbox.col = x;
+      checkbox.type = "checkbox";
+      checkbox.checked = board.grid[y][x];
+      row.appendChild(checkbox);
+    }
+    parent.appendChild(row);
+  }
+  parent.addEventListener("change", function(event) {
+    board.nextRound[event.target.row][event.target.col] = event.target.checked;
+  });
+}
+
+  var game = new Board(20, 2);
+  var grid = document.querySelector("#grid");
+  
+  var button = document.querySelector("#next");
+  button.addEventListener("click", function(event) {
+    game.advanceRound();
+    while (grid.lastChild) {
+      grid.removeChild(grid.lastChild);
+    }
+    drawGrid(grid, game);
+  });
+  
+  drawGrid(grid, game);
